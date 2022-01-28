@@ -1,11 +1,11 @@
 class LS {
 	// help functions to get and set data at LS
-	getData(name){
+	getData(){
 		let data;
-		if(localStorage.getItem(name) === null){
+		if(localStorage.getItem('books') === null){
 			data = [];
 		} else {
-			data = JSON.parse(localStorage.getItem(name));
+			data = JSON.parse(localStorage.getItem('books'));
 		}
 		return data
 	}
@@ -15,28 +15,25 @@ class LS {
 	}
 
 	// add task to LS
-	addTask(task){
+	addBook(book){
 		//set data to LS
-		let tasks = this.getData('tasks');
-		tasks.push(task);
-		this.setData('tasks', tasks);
+		let books = this.getData();
+		books.push(book);
+		localStorage.setItem('books', JSON.stringify(books))
+		//this.setData('books', books);
+		
 		// log to console that task is added to LS
-		task.addedToLS();
+		book.addedToLS();
 	}
 
 	// delete task from LS
-	deleteTask(task){
-		let tasks = this.getData('tasks');
-		tasks.forEach(function(tasksElement, tasksIndex){
-			if(tasksElement.name === task){
-				tasks.splice(tasksIndex, 1);
+	deleteBook(book){
+		let books = this.getData(); //('books');
+		books.forEach(function(booksElement, booksIndex){
+			if(booksElement.isbn == book){
+				books.splice(booksIndex, 1);
 			}
 		});
-		this.setData('tasks', tasks);
-	}
-
-	// delete all tasks from LS
-	deleteTasks(){
-		localStorage.clear();
+		this.setData('books', books);
 	}
 }

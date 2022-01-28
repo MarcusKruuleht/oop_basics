@@ -1,56 +1,54 @@
-// UI and LS objects
 ui = new UI();
 ls = new LS();
 
 // event elements
 // form submit events
 const form = document.querySelector('form');
-const taskInput = document.querySelector('#task');
-// taskList X click event
-const taskList = document.querySelector('ul');
-taskList.addEventListener('click', deleteTask);
-// clear button event
-const clearBtn = document.querySelector('#clear-tasks');
-clearBtn.addEventListener('click', deleteTask);
+const booktitleInput = document.querySelector('#title');
+const bookauthorInput = document.querySelector('#author')
+const bookisbnInput = document.querySelector('#isbn')
+const bookList = document.querySelector('tbody.table-list');
+
 // page reload
-document.addEventListener('DOMContentLoaded', getTasks);
+document.addEventListener('DOMContentLoaded', getBooks);
+
 
 //events
 // form submit event
-form.addEventListener('submit', addTask);
+form.addEventListener('submit', addBook);
 
-function addTask(e) {
+bookList.addEventListener('click', deleteBook);
+
+function addBook(e) {
 	// create a new object Task with input value
-	const task = new Task(taskInput.value);
+	const booktitle =  booktitleInput.value;
+	const bookauthor =  bookauthorInput.value;
+	const bookisbn =  bookisbnInput.value;
+	
+	let newbook = new book(booktitle, bookauthor, bookisbn);
 	// add task value to the visual by UI object
-	ui.addTask(task);
+	ui.addBook(newbook);
 	// add task value to the LS by LS object
-	ls.addTask(task);
+	ls.addBook(newbook);
 	e.preventDefault();
 }
 
-function deleteTask(e){
+function deleteBook(e){
 	// get task name
-	let task = e.target.parentElement.firstChild;
+	if (e.target.tagName === 'A'){
+		let book = e.target.parentElement.firstChild;
 	// delete task value from visual by UI object
-	ui.deleteTask(task);
+	ui.deleteBook(book);
 	// change task element content before deleting from LS
-	task = task.textContent;
+	book = book.parentElement.previousElementSibling.textContent;
 	// delete task value from LS by Ls object
-	ls.deleteTask(task);
+	ls.deleteBook(book);
+	}
 }
 
-function deleteTasks(e){
-	// delete all tasks from UI
-	let tasks = document.querySelector('ul');
-	ui.deleteTasks(tasks);
-	// delete tasks from LS
-	ls.deleteTasks();
-}
-
-function getTasks(e){
+function getBooks(){
 	// delete tasks from LS by this localStorage name
-	tasks = ls.getData('tasks');
+	books = ls.getData();
 	// create task list by UI
-	ui.getTasks(tasks);
+	books.forEach(ui.getBooks.bind(books));
 }
